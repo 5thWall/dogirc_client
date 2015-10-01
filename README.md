@@ -1,5 +1,11 @@
 # DogircClient
 
+A web based IRC client to drive feature development in [DogIRC][dirc].
+
+Built with: Elixir, Phoenix, Elm, and DogIRC
+
+## Phoenix Stuff
+
 To start your Phoenix app:
 
   1. Install dependencies with `mix deps.get`
