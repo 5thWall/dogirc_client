@@ -4,6 +4,8 @@ A web based IRC client to drive feature development in [DogIRC][dirc].
 
 Built with: Elixir, Phoenix, Elm, and DogIRC
 
+[dirc]: https://github.com/5thWall/DogIRC
+
 ## Phoenix Stuff
 
 To start your Phoenix app:
