@@ -7,5 +7,4 @@ main =
   view
 
 view =
-  div [ class "jumbotron" ]
-    [ h2 [] [ text "Hello from Elm" ] ]
+    h2 [ class "ui header" ] [ text "Hello from Elm" ]

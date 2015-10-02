@@ -4065,11 +4065,9 @@ Elm.Main.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var view = A2($Html.div,
-   _L.fromArray([$Html$Attributes.$class("jumbotron")]),
-   _L.fromArray([A2($Html.h2,
-   _L.fromArray([]),
-   _L.fromArray([$Html.text("Hello from Elm")]))]));
+   var view = A2($Html.h2,
+   _L.fromArray([$Html$Attributes.$class("ui header")]),
+   _L.fromArray([$Html.text("Hello from Elm")]));
    var main = view;
    _elm.Main.values = {_op: _op
                       ,main: main
