@@ -4288,15 +4288,25 @@ Elm.Main.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $StartApp = Elm.StartApp.make(_elm),
    $Task = Elm.Task.make(_elm);
+   var addMessage = Elm.Native.Port.make(_elm).inboundSignal("addMessage",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+      v);
+   });
+   var messages = A2($Signal._op["<~"],
+   $Channel.AddMessage,
+   addMessage);
    var app = $StartApp.start({_: {}
                              ,init: $Channel.init("#DogIRC")
-                             ,inputs: _L.fromArray([])
+                             ,inputs: _L.fromArray([messages])
                              ,update: $Channel.update
                              ,view: $Channel.view});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);
    _elm.Main.values = {_op: _op
+                      ,messages: messages
                       ,app: app
                       ,main: main};
    return _elm.Main.values;
