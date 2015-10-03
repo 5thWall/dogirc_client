@@ -1,2 +1,4 @@
-<div class="ui container" id="elm-main">
+<h1 class="ui header">DogIRC Client</h1>
+
+<div id="elm-main">
 </div>

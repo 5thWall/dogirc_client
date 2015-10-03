@@ -1,10 +1,21 @@
 module Main where
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Effects exposing (Never)
+import Channel exposing (init, update, view)
+import StartApp
+import Task
+
+app =
+  StartApp.start
+    { init = init "#DogIRC"
+    , update = update
+    , view = view
+    , inputs = []
+    }
 
 main =
-  view
+  app.html
 
-view =
-    h2 [ class "ui header" ] [ text "Hello from Elm" ]
+port tasks : Signal (Task.Task Never ())
+port tasks =
+  app.tasks

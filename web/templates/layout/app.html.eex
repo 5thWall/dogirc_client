@@ -13,14 +13,16 @@
 
   <body>
 
-    <div class="ui info message">
-      <p><%= get_flash(@conn, :info) %></p>
-    </div> 
-    <div class="ui info message">
-      <p><%= get_flash(@conn, :error) %></p>
-    </div>
+    <div class="ui container">
+      <div class="ui info message">
+        <p><%= get_flash(@conn, :info) %></p>
+      </div> 
+      <div class="ui info message">
+        <p><%= get_flash(@conn, :error) %></p>
+      </div>
 
-    <%= @inner %>
+      <%= @inner %>
+    </div>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
