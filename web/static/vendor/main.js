@@ -4284,8 +4284,8 @@ Elm.Main.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $StartApp = Elm.StartApp.make(_elm),
    $Task = Elm.Task.make(_elm);
-   var addMessage = Elm.Native.Port.make(_elm).inboundSignal("addMessage",
-   "Message.Message",
+   var addAction = Elm.Native.Port.make(_elm).inboundSignal("addAction",
+   "Message.Msg",
    function (v) {
       return typeof v === "object" && "nick" in v && "message" in v ? {_: {}
                                                                       ,nick: typeof v.nick === "string" || typeof v.nick === "object" && v.nick instanceof String ? v.nick : _U.badPort("a string",
@@ -4294,9 +4294,27 @@ Elm.Main.make = function (_elm) {
                                                                       v.message)} : _U.badPort("an object with fields `nick`, `message`",
       v);
    });
+   var actions = A2($Signal._op["<~"],
+   $Message.Action,
+   addAction);
+   var addPrivmsg = Elm.Native.Port.make(_elm).inboundSignal("addPrivmsg",
+   "Message.Msg",
+   function (v) {
+      return typeof v === "object" && "nick" in v && "message" in v ? {_: {}
+                                                                      ,nick: typeof v.nick === "string" || typeof v.nick === "object" && v.nick instanceof String ? v.nick : _U.badPort("a string",
+                                                                      v.nick)
+                                                                      ,message: typeof v.message === "string" || typeof v.message === "object" && v.message instanceof String ? v.message : _U.badPort("a string",
+                                                                      v.message)} : _U.badPort("an object with fields `nick`, `message`",
+      v);
+   });
+   var privmsgs = A2($Signal._op["<~"],
+   $Message.Privmsg,
+   addPrivmsg);
    var messages = A2($Signal._op["<~"],
    $Channel.AddMessage,
-   addMessage);
+   A2($Signal.merge,
+   privmsgs,
+   actions));
    var app = $StartApp.start({_: {}
                              ,init: $Channel.init("#DogIRC")
                              ,inputs: _L.fromArray([messages])
@@ -4306,6 +4324,8 @@ Elm.Main.make = function (_elm) {
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);
    _elm.Main.values = {_op: _op
+                      ,privmsgs: privmsgs
+                      ,actions: actions
                       ,messages: messages
                       ,app: app
                       ,main: main};
@@ -4402,9 +4422,9 @@ Elm.Message.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var view = function (message) {
+   var viewAction = function (message) {
       return A2($Html.p,
-      _L.fromArray([]),
+      _L.fromArray([$Html$Attributes.$class("action")]),
       _L.fromArray([A2($Html.span,
                    _L.fromArray([$Html$Attributes.$class("nick")]),
                    _L.fromArray([$Html.text(A2($Basics._op["++"],
@@ -4414,15 +4434,49 @@ Elm.Message.make = function (_elm) {
                    _L.fromArray([$Html$Attributes.$class("message")]),
                    _L.fromArray([$Html.text(message.message)]))]));
    };
-   var Message = F2(function (a,
-   b) {
+   var viewPrivmsg = function (message) {
+      return A2($Html.p,
+      _L.fromArray([$Html$Attributes.$class("privmsg")]),
+      _L.fromArray([A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("nick")]),
+                   _L.fromArray([$Html.text(A2($Basics._op["++"],
+                   message.nick,
+                   ":"))]))
+                   ,A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("message")]),
+                   _L.fromArray([$Html.text(message.message)]))]));
+   };
+   var view = function (message) {
+      return function () {
+         switch (message.ctor)
+         {case "Action":
+            return viewAction(message._0);
+            case "Privmsg":
+            return viewPrivmsg(message._0);}
+         _U.badCase($moduleName,
+         "between lines 15 and 17");
+      }();
+   };
+   var Action = function (a) {
+      return {ctor: "Action"
+             ,_0: a};
+   };
+   var Privmsg = function (a) {
+      return {ctor: "Privmsg"
+             ,_0: a};
+   };
+   var Msg = F2(function (a,b) {
       return {_: {}
              ,message: b
              ,nick: a};
    });
    _elm.Message.values = {_op: _op
-                         ,Message: Message
-                         ,view: view};
+                         ,Msg: Msg
+                         ,Privmsg: Privmsg
+                         ,Action: Action
+                         ,view: view
+                         ,viewPrivmsg: viewPrivmsg
+                         ,viewAction: viewAction};
    return _elm.Message.values;
 };
 Elm.Native.Array = {};
