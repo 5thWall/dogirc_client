@@ -2,7 +2,7 @@ defmodule DogircClient.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", DogircClient.RoomChannel
+  channel "irc:*", DogircClient.IrcChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

@@ -18,7 +18,7 @@ defmodule DogircClient.Mixfile do
   def application do
     [mod: {DogircClient, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :dogirc]]
   end
 
   # Specifies which paths to compile per environment

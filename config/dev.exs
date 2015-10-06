@@ -39,3 +39,7 @@ config :dogirc_client, DogircClient.Repo,
   password: "postgres",
   database: "dogirc_client_dev",
   pool_size: 10
+
+config :dogirc, :client,
+  nick: "DogIRC",
+  user: "DogIRC"

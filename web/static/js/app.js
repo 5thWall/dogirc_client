@@ -18,10 +18,15 @@ import "deps/phoenix_html/web/static/js/phoenix_html"
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-// import socket from "./socket"
+import socket from "./socket"
 
 var elmDiv = document.getElementById('elm-main'),
-    elmApp = Elm.embed(Elm.Main, elmDiv, { addMessage: "" });
+    elmApp = Elm.embed(Elm.Main, elmDiv, { addMessage: "" }),
+    channel = socket.channel("irc:freenode", {});
+
+channel.on("privmsg", function(message) {
+  elmApp.ports.addMessage.send(message.msg);
+});
 
 elmApp.ports.addMessage.send("Here is a message");
 elmApp.ports.addMessage.send("And here is another");

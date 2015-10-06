@@ -6,6 +6,8 @@ defmodule DogircClient do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    setup_irc
+
     children = [
       # Start the endpoint when the application starts
       supervisor(DogircClient.Endpoint, []),
@@ -26,5 +28,10 @@ defmodule DogircClient do
   def config_change(changed, _new, removed) do
     DogircClient.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp setup_irc do
+    DogIRC.Client.join("#test")
+    DogIRC.Client.add_handler(DogircClient.PrivmsgHandler, [])
   end
 end
