@@ -3,12 +3,13 @@ module Channel where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Effects exposing (Effects)
+import Message exposing (Message)
 
 -- MODEL
 
 type alias Channel =
   { name : String
-  , messages : List String
+  , messages : List Message
   }
 
 init : String -> (Channel, Effects.Effects Action)
@@ -17,7 +18,7 @@ init name =
 
 -- UPDATE
 
-type Action = AddMessage String
+type Action = AddMessage Message
 
 update : Action -> Channel -> (Channel, Effects.Effects Action)
 update action model =
@@ -42,8 +43,4 @@ channelTab channel =
 channelView : Channel -> Html
 channelView channel =
   div [ class "ui bottom attached active tab segment" ]
-    (List.map messageItem channel.messages)
-
-messageItem : String -> Html
-messageItem message =
-  p [] [ text message ]
+    (List.map Message.view channel.messages)

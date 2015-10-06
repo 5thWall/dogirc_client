@@ -2,12 +2,13 @@ module Main where
 
 import Effects exposing (Never)
 import Channel exposing (init, update, view)
+import Message exposing (Message)
 import StartApp
 import Task
 import Signal exposing ((<~))
 
 
-port addMessage : Signal String
+port addMessage : Signal Message
 
 messages : Signal Channel.Action
 messages = Channel.AddMessage <~ addMessage

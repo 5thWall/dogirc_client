@@ -287,18 +287,14 @@ Elm.Channel.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Message = Elm.Message.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var messageItem = function (message) {
-      return A2($Html.p,
-      _L.fromArray([]),
-      _L.fromArray([$Html.text(message)]));
-   };
    var channelView = function (channel) {
       return A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("ui bottom attached active tab segment")]),
       A2($List.map,
-      messageItem,
+      $Message.view,
       channel.messages));
    };
    var channelTab = function (channel) {
@@ -328,7 +324,7 @@ Elm.Channel.make = function (_elm) {
                    model)
                    ,_1: $Effects.none};}
          _U.badCase($moduleName,
-         "between lines 24 and 26");
+         "between lines 25 and 27");
       }();
    });
    var AddMessage = function (a) {
@@ -355,8 +351,7 @@ Elm.Channel.make = function (_elm) {
                          ,update: update
                          ,view: view
                          ,channelTab: channelTab
-                         ,channelView: channelView
-                         ,messageItem: messageItem};
+                         ,channelView: channelView};
    return _elm.Channel.values;
 };
 Elm.Char = Elm.Char || {};
@@ -4284,14 +4279,19 @@ Elm.Main.make = function (_elm) {
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Message = Elm.Message.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $StartApp = Elm.StartApp.make(_elm),
    $Task = Elm.Task.make(_elm);
    var addMessage = Elm.Native.Port.make(_elm).inboundSignal("addMessage",
-   "String",
+   "Message.Message",
    function (v) {
-      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+      return typeof v === "object" && "nick" in v && "message" in v ? {_: {}
+                                                                      ,nick: typeof v.nick === "string" || typeof v.nick === "object" && v.nick instanceof String ? v.nick : _U.badPort("a string",
+                                                                      v.nick)
+                                                                      ,message: typeof v.message === "string" || typeof v.message === "object" && v.message instanceof String ? v.message : _U.badPort("a string",
+                                                                      v.message)} : _U.badPort("an object with fields `nick`, `message`",
       v);
    });
    var messages = A2($Signal._op["<~"],
@@ -4383,6 +4383,47 @@ Elm.Maybe.make = function (_elm) {
                        ,Just: Just
                        ,Nothing: Nothing};
    return _elm.Maybe.values;
+};
+Elm.Message = Elm.Message || {};
+Elm.Message.make = function (_elm) {
+   "use strict";
+   _elm.Message = _elm.Message || {};
+   if (_elm.Message.values)
+   return _elm.Message.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Message",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var view = function (message) {
+      return A2($Html.p,
+      _L.fromArray([]),
+      _L.fromArray([A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("nick")]),
+                   _L.fromArray([$Html.text(A2($Basics._op["++"],
+                   message.nick,
+                   ":"))]))
+                   ,A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("message")]),
+                   _L.fromArray([$Html.text(message.message)]))]));
+   };
+   var Message = F2(function (a,
+   b) {
+      return {_: {}
+             ,message: b
+             ,nick: a};
+   });
+   _elm.Message.values = {_op: _op
+                         ,Message: Message
+                         ,view: view};
+   return _elm.Message.values;
 };
 Elm.Native.Array = {};
 Elm.Native.Array.make = function(localRuntime) {
