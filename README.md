@@ -1,5 +1,7 @@
 # DogircClient
 
+[![Stories in Ready](https://badge.waffle.io/5thWall/dogirc_client.png?label=ready&title=Ready)](http://waffle.io/5thWall/dogirc_client)
+
 A web based IRC client to drive feature development in [DogIRC][dirc].
 
 Built with: Elixir, Phoenix, Elm, and DogIRC
