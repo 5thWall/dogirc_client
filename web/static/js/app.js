@@ -20,16 +20,12 @@ import "deps/phoenix_html/web/static/js/phoenix_html"
 
 import socket from "./socket"
 
-var initalMessage = { nick: "", message: "" };
+var initalMessage = { nick: "", message: "", kind: "privmsg" };
 
 var elmDiv = document.getElementById('elm-main'),
-    elmApp = Elm.embed(Elm.Main, elmDiv, { addPrivmsg: initalMessage, addAction: initalMessage }),
+    elmApp = Elm.embed(Elm.Main, elmDiv, { addMessage: initalMessage }),
     channel = socket.channel("irc:freenode", {});
 
-channel.on("privmsg", function(message) {
-  elmApp.ports.addPrivmsg.send(message);
-});
-
-channel.on("action", function(message) {
-  elmApp.ports.addAction.send(message);
+channel.on("message", function(message) {
+  elmApp.ports.addMessage.send(message);
 });

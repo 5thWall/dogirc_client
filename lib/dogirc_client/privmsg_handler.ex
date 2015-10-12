@@ -4,14 +4,14 @@ defmodule DogircClient.PrivmsgHandler do
   alias DogIRC.Command
 
   def handle_event(%Command{type: :privmsg, message: msg, from: usr}, state) do
-    message = %{message: msg, nick: usr.nick}
-    DogircClient.Endpoint.broadcast!("irc:freenode", "privmsg", message)
+    message = %{message: msg, nick: usr.nick, kind: "privmsg"}
+    DogircClient.Endpoint.broadcast!("irc:freenode", "message", message)
     {:ok, state}
   end
 
   def handle_event(%Command{type: :action, message: msg, from: usr}, state) do
-    message = %{message: msg, nick: usr.nick}
-    DogircClient.Endpoint.broadcast!("irc:freenode", "action", message)
+    message = %{message: msg, nick: usr.nick, kind: "action"}
+    DogircClient.Endpoint.broadcast!("irc:freenode", "message", message)
     {:ok, state}
   end
 

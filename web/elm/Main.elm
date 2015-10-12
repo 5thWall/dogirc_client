@@ -8,17 +8,10 @@ import Task
 import Signal exposing ((<~))
 
 
-port addPrivmsg : Signal Message.Msg
-port addAction  : Signal Message.Msg
-
-privmsgs : Signal Message
-privmsgs = Message.Privmsg <~ addPrivmsg
-
-actions : Signal Message
-actions = Message.Action <~ addAction
+port addMessage : Signal Message
 
 messages : Signal Channel.Action
-messages = Channel.AddMessage <~ (Signal.merge privmsgs actions)
+messages = Channel.AddMessage <~ addMessage
 
 app =
   StartApp.start
