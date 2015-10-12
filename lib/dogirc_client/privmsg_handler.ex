@@ -1,7 +1,7 @@
 defmodule DogircClient.PrivmsgHandler do
   use GenEvent
 
-  alias DogIRC.Command
+  alias Dogirc.Command
 
   def handle_event(%Command{type: :privmsg, message: msg, from: usr}, state) do
     message = %{message: msg, nick: usr.nick, kind: "privmsg"}

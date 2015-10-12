@@ -4300,7 +4300,7 @@ Elm.Main.make = function (_elm) {
    $Channel.AddMessage,
    addMessage);
    var app = $StartApp.start({_: {}
-                             ,init: $Channel.init("#DogIRC")
+                             ,init: $Channel.init("#Dogirc")
                              ,inputs: _L.fromArray([messages])
                              ,update: $Channel.update
                              ,view: $Channel.view});

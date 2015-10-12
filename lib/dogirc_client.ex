@@ -31,7 +31,7 @@ defmodule DogircClient do
   end
 
   defp setup_irc do
-    DogIRC.Client.join("#test")
-    DogIRC.Client.add_handler(DogircClient.PrivmsgHandler, [])
+    Dogirc.Client.join("#test")
+    Dogirc.Client.add_handler(DogircClient.PrivmsgHandler, [])
   end
 end

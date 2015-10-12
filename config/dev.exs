@@ -41,5 +41,5 @@ config :dogirc_client, DogircClient.Repo,
   pool_size: 10
 
 config :dogirc, :client,
-  nick: "DogIRC",
-  user: "DogIRC"
+  nick: "Dogirc",
+  user: "Dogirc"

@@ -15,7 +15,7 @@ messages = Channel.AddMessage <~ addMessage
 
 app =
   StartApp.start
-    { init = init "#DogIRC"
+    { init = init "#Dogirc"
     , update = update
     , view = view
     , inputs = [messages]
