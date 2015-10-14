@@ -17,17 +17,29 @@ type alias Channel =
 
 init : String -> (Channel, Effects.Effects Action)
 init name =
-  ({ name = name, messages = [], users = ["Andy", "Bob", "Fred"]}, Effects.none)
+  ({ name = name, messages = [], users = [] }, Effects.none)
 
 -- UPDATE
 
-type Action = AddMessage Message
+type Action = AddMessage Message | UserJoin User | UserPart User
 
 update : Action -> Channel -> (Channel, Effects.Effects Action)
 update action model =
   case action of
     AddMessage message ->
       ({ model | messages <- model.messages ++ [ message ] }, Effects.none)
+    UserJoin user ->
+      ({ model | users <- addUser user model.users }, Effects.none)
+    UserPart user ->
+      ({ model | users <- removeUser user model.users }, Effects.none)
+
+addUser : User -> List User -> List User
+addUser user users =
+  List.sort (user :: users)
+
+removeUser : User -> List User -> List User
+removeUser user users =
+  List.filter ((/=)user) users
 
 -- VIEW
 

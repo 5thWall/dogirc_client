@@ -323,6 +323,20 @@ Elm.Channel.make = function (_elm) {
       _L.fromArray([channelTab(model)
                    ,channelView(model)]));
    });
+   var removeUser = F2(function (user,
+   users) {
+      return A2($List.filter,
+      F2(function (x,y) {
+         return !_U.eq(x,y);
+      })(user),
+      users);
+   });
+   var addUser = F2(function (user,
+   users) {
+      return $List.sort(A2($List._op["::"],
+      user,
+      users));
+   });
    var update = F2(function (action,
    model) {
       return function () {
@@ -334,11 +348,35 @@ Elm.Channel.make = function (_elm) {
                                     model.messages,
                                     _L.fromArray([action._0]))]],
                    model)
+                   ,_1: $Effects.none};
+            case "UserJoin":
+            return {ctor: "_Tuple2"
+                   ,_0: _U.replace([["users"
+                                    ,A2(addUser,
+                                    action._0,
+                                    model.users)]],
+                   model)
+                   ,_1: $Effects.none};
+            case "UserPart":
+            return {ctor: "_Tuple2"
+                   ,_0: _U.replace([["users"
+                                    ,A2(removeUser,
+                                    action._0,
+                                    model.users)]],
+                   model)
                    ,_1: $Effects.none};}
          _U.badCase($moduleName,
-         "between lines 28 and 30");
+         "between lines 28 and 34");
       }();
    });
+   var UserPart = function (a) {
+      return {ctor: "UserPart"
+             ,_0: a};
+   };
+   var UserJoin = function (a) {
+      return {ctor: "UserJoin"
+             ,_0: a};
+   };
    var AddMessage = function (a) {
       return {ctor: "AddMessage"
              ,_0: a};
@@ -348,9 +386,7 @@ Elm.Channel.make = function (_elm) {
              ,_0: {_: {}
                   ,messages: _L.fromArray([])
                   ,name: name
-                  ,users: _L.fromArray(["Andy"
-                                       ,"Bob"
-                                       ,"Fred"])}
+                  ,users: _L.fromArray([])}
              ,_1: $Effects.none};
    };
    var Channel = F3(function (a,
@@ -365,7 +401,11 @@ Elm.Channel.make = function (_elm) {
                          ,Channel: Channel
                          ,init: init
                          ,AddMessage: AddMessage
+                         ,UserJoin: UserJoin
+                         ,UserPart: UserPart
                          ,update: update
+                         ,addUser: addUser
+                         ,removeUser: removeUser
                          ,view: view
                          ,channelTab: channelTab
                          ,channelView: channelView
@@ -4302,6 +4342,24 @@ Elm.Main.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $StartApp = Elm.StartApp.make(_elm),
    $Task = Elm.Task.make(_elm);
+   var userPart = Elm.Native.Port.make(_elm).inboundSignal("userPart",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+      v);
+   });
+   var parting = A2($Signal.map,
+   $Channel.UserPart,
+   userPart);
+   var userJoin = Elm.Native.Port.make(_elm).inboundSignal("userJoin",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+      v);
+   });
+   var joining = A2($Signal.map,
+   $Channel.UserJoin,
+   userJoin);
    var addMessage = Elm.Native.Port.make(_elm).inboundSignal("addMessage",
    "Message.Message",
    function (v) {
@@ -4314,12 +4372,14 @@ Elm.Main.make = function (_elm) {
                                                                                      v.kind)} : _U.badPort("an object with fields `nick`, `message`, `kind`",
       v);
    });
-   var messages = A2($Signal._op["<~"],
+   var messages = A2($Signal.map,
    $Channel.AddMessage,
    addMessage);
    var app = $StartApp.start({_: {}
                              ,init: $Channel.init("#Dogirc")
-                             ,inputs: _L.fromArray([messages])
+                             ,inputs: _L.fromArray([messages
+                                                   ,joining
+                                                   ,parting])
                              ,update: $Channel.update
                              ,view: $Channel.view});
    var main = app.html;
@@ -4327,6 +4387,8 @@ Elm.Main.make = function (_elm) {
    app.tasks);
    _elm.Main.values = {_op: _op
                       ,messages: messages
+                      ,joining: joining
+                      ,parting: parting
                       ,app: app
                       ,main: main};
    return _elm.Main.values;

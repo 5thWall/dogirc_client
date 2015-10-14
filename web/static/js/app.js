@@ -22,10 +22,24 @@ import socket from "./socket"
 
 var initalMessage = { nick: "", message: "", kind: "privmsg" };
 
+var ports = { addMessage: initalMessage,
+              userJoin: "",
+              userPart: "" };
+
 var elmDiv = document.getElementById('elm-main'),
-    elmApp = Elm.embed(Elm.Main, elmDiv, { addMessage: initalMessage }),
+    elmApp = Elm.embed(Elm.Main, elmDiv, ports),
     channel = socket.channel("irc:freenode", {});
 
 channel.on("message", function(message) {
   elmApp.ports.addMessage.send(message);
 });
+
+channel.on("userJoin", function(user) {
+  elmApp.ports.userJoin.send(user.nick);
+});
+
+channel.on("userPart", function(user) {
+  elmApp.ports.userPart.send(user.nick);
+});
+
+window.elmApp = elmApp;

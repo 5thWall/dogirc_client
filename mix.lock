@@ -1,7 +1,7 @@
 %{"cowboy": {:hex, :cowboy, "1.0.3"},
   "cowlib": {:hex, :cowlib, "1.0.1"},
   "decimal": {:hex, :decimal, "1.1.0"},
-  "dogirc": {:git, "../dogirc", "e8bad00d5f131340f9f68cd1cf69c2197062a980", []},
+  "dogirc": {:git, "../dogirc", "856e1435cd1f159dac9668341813e1eefd862153", []},
   "dogma": {:hex, :dogma, "0.0.8"},
   "ecto": {:hex, :ecto, "1.0.4"},
   "fs": {:hex, :fs, "0.9.2"},

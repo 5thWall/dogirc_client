@@ -5,20 +5,36 @@ import Channel exposing (init, update, view)
 import Message exposing (Message)
 import StartApp
 import Task
-import Signal exposing ((<~))
 
+-- PORTS
 
 port addMessage : Signal Message
+port userJoin : Signal String
+port userPart : Signal String
+
+-- SIGNALS
 
 messages : Signal Channel.Action
-messages = Channel.AddMessage <~ addMessage
+messages = Signal.map Channel.AddMessage addMessage
+
+joining : Signal Channel.Action
+joining = Signal.map Channel.UserJoin userJoin
+
+parting : Signal Channel.Action
+parting = Signal.map Channel.UserPart userPart
+
+-- APP
 
 app =
   StartApp.start
     { init = init "#Dogirc"
     , update = update
     , view = view
-    , inputs = [messages]
+    , inputs =
+      [ messages
+      , joining
+      ,parting
+      ]
     }
 
 main =
