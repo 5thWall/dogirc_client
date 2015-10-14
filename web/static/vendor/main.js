@@ -290,12 +290,24 @@ Elm.Channel.make = function (_elm) {
    $Message = Elm.Message.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var userView = function (user) {
+      return A2($Html.p,
+      _L.fromArray([]),
+      _L.fromArray([$Html.text(user)]));
+   };
    var channelView = function (channel) {
       return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("ui bottom attached active tab segment")]),
-      A2($List.map,
-      $Message.view,
-      channel.messages));
+      _L.fromArray([$Html$Attributes.$class("ui bottom attached active tab segment grid")]),
+      _L.fromArray([A2($Html.div,
+                   _L.fromArray([$Html$Attributes.$class("thirteen wide column messages")]),
+                   A2($List.map,
+                   $Message.view,
+                   channel.messages))
+                   ,A2($Html.div,
+                   _L.fromArray([$Html$Attributes.$class("right floated two wide column userlist")]),
+                   A2($List.map,
+                   userView,
+                   channel.users))]));
    };
    var channelTab = function (channel) {
       return A2($Html.div,
@@ -324,7 +336,7 @@ Elm.Channel.make = function (_elm) {
                    model)
                    ,_1: $Effects.none};}
          _U.badCase($moduleName,
-         "between lines 25 and 27");
+         "between lines 28 and 30");
       }();
    });
    var AddMessage = function (a) {
@@ -335,14 +347,19 @@ Elm.Channel.make = function (_elm) {
       return {ctor: "_Tuple2"
              ,_0: {_: {}
                   ,messages: _L.fromArray([])
-                  ,name: name}
+                  ,name: name
+                  ,users: _L.fromArray(["Andy"
+                                       ,"Bob"
+                                       ,"Fred"])}
              ,_1: $Effects.none};
    };
-   var Channel = F2(function (a,
-   b) {
+   var Channel = F3(function (a,
+   b,
+   c) {
       return {_: {}
              ,messages: b
-             ,name: a};
+             ,name: a
+             ,users: c};
    });
    _elm.Channel.values = {_op: _op
                          ,Channel: Channel
@@ -351,7 +368,8 @@ Elm.Channel.make = function (_elm) {
                          ,update: update
                          ,view: view
                          ,channelTab: channelTab
-                         ,channelView: channelView};
+                         ,channelView: channelView
+                         ,userView: userView};
    return _elm.Channel.values;
 };
 Elm.Char = Elm.Char || {};

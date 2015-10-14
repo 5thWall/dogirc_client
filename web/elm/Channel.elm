@@ -7,14 +7,17 @@ import Message exposing (Message)
 
 -- MODEL
 
+type alias User = String
+
 type alias Channel =
   { name : String
   , messages : List Message
+  , users : List User
   }
 
 init : String -> (Channel, Effects.Effects Action)
 init name =
-  ({ name = name, messages = []}, Effects.none)
+  ({ name = name, messages = [], users = ["Andy", "Bob", "Fred"]}, Effects.none)
 
 -- UPDATE
 
@@ -42,5 +45,11 @@ channelTab channel =
 
 channelView : Channel -> Html
 channelView channel =
-  div [ class "ui bottom attached active tab segment" ]
-    (List.map Message.view channel.messages)
+  div [ class "ui bottom attached active tab segment grid" ]
+    [ div [ class "thirteen wide column messages" ] (List.map Message.view channel.messages)
+    , div [ class "right floated two wide column userlist" ] (List.map userView channel.users)
+    ]
+
+userView : User -> Html
+userView user =
+  p [] [ text user ]
